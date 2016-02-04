@@ -1,0 +1,30 @@
+{
+  "name": "praece-sails-bookshelf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/praece/sails-bookshelf.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/praece/sails-bookshelf/issues"
+  },
+  "sails": {
+    "isHook": true
+  },
+  "homepage": "https://github.com/praece/sails-bookshelf#readme",
+  "dependencies": {
+    "bluebird": "^3.2.1",
+    "bookshelf": "^0.9.1",
+    "bookshelf-scopes": "^1.4.0",
+    "knex": "^0.9.0",
+    "lodash": "^3.10.1",
+    "sails-util-mvcsloader": "^0.3.2"
+  }
+}

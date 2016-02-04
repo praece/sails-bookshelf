@@ -12,12 +12,13 @@
  * @param {*} * - other params will be used as `values` in the create
  */
 module.exports = function createRecord (req, res) {
-	// Load the model
+  // Load the model
   var Model = sails.models[req.options.model];
+  var values = _.defaults(req.params.all() || {}, req.options.values);
 
   // Create and save the new instance
   sails.db.transaction(function(t) {
-    return Model.forge(req.params.all())
+    return Model.forge(values)
       .save(null, {transacting: t})
       .then(function(created) {
         res.created(created.toJSON());

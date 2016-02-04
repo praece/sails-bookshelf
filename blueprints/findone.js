@@ -16,12 +16,14 @@
 module.exports = function findOneRecord (req, res) {
   // Load the model
   var Model = sails.models[req.options.model];
+  var params = req.params.all();
 
   // Fetch the record
-  Model.forge({id: req.param('id')})
+  Model.forge({id: params.id})
     .fetch()
     .then(function(record) {
-      return record.load(_.keys(record.relationships));
+      if (!record) return;
+      return record.load(params.populate || _.keys(record.relationships));
     })
     .then(function(record) {
       if (!record) return res.notFound('No record found with the specified `id`.');

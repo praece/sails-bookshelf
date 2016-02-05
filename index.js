@@ -33,6 +33,8 @@ module.exports = function (sails) {
           this.on('saving', strongParameters);
         },
         initialize: function() {
+          if (sails.config.models.initialize) sails.config.models.initialize(this);
+          if (this.constructor.initialize) this.constructor.initialize(this);
           this.initSails();
         }
       }, {

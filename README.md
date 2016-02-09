@@ -2,6 +2,9 @@
 
 Integration for [bookshelfjs ORM](http://bookshelfjs.org/).
 
+### Usage:
+
+
 ### Configuration:
 
 `models/user.js`

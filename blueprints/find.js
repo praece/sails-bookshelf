@@ -20,17 +20,16 @@ module.exports = function findRecords (req, res) {
   // Load the model
   var Model = sails.models[req.options.model];
   var params = req.params.all();
+  var model = Model.buildQuery(params);
+  var collection = Model.collection();
 
   // Build the query and fetch the results
-  Model.buildQuery(params)
-    .fetchAll()
-    .then(function(items) {
-      if (items.length === 0) return items;
-
-      return items.load(params.populate || _.keys(items.models[0].relationships));
-    })
-    .then(function(items) {
-      return res.ok(items.toJSON());
+  model.fetchAll({require: true})
+    .call('load', params.populate || _.keys(model.relationships))
+    .call('toJSON')
+    .then(res.ok)
+    .catch(collection.constructor.EmptyError, function() {
+      return res.ok([]);
     })
     .catch(function(err) {
       sails.log.error(err);

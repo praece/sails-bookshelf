@@ -13,18 +13,12 @@ module.exports = function updateOneRecord (req, res) {
   var Model = sails.models[req.options.model];
 
   // Grab and update the instance
-  sails.db.transaction(function(t) {
-    return Model.forge({id: req.param('id')})
-      .save(req.params.all(), {transacting: t})
-      .then(function(created) {
-        res.created(created.toJSON());
-      })
-      .catch(function(err) {
-        sails.log.error(err);
-        res.serverError(err);
-      });
-  })
-  .catch(function(err) {
-    sails.log.error(err);
-  });
+  Model.forge({id: req.param('id')})
+    .saveTransaction(req.params.all())
+    .call('toJSON')
+    .then(res.ok)
+    .catch(function(err) {
+      sails.log.error(err);
+      res.serverError(err);
+    });
 };

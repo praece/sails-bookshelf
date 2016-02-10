@@ -17,18 +17,12 @@ module.exports = function createRecord (req, res) {
   var values = _.defaults(req.params.all() || {}, req.options.values);
 
   // Create and save the new instance
-  sails.db.transaction(function(t) {
-    return Model.forge(values)
-      .save(null, {transacting: t})
-      .then(function(created) {
-        res.created(created.toJSON());
-      })
-      .catch(function(err) {
-        sails.log.error(err);
-        res.serverError(err);
-      });
-  })
-  .catch(function(err) {
-    sails.log.error(err);
-  });
+  Model.forge(values)
+    .saveTransaction()
+    .call('toJSON')
+    .then(res.created)
+    .catch(function(err) {
+      sails.log.error(err);
+      res.serverError(err);
+    });
 };

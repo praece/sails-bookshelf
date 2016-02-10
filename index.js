@@ -1,5 +1,6 @@
 module.exports = function (sails) {
   var loader = require('sails-util-mvcsloader')(sails);
+  var Promise = require('bluebird');
   var knex = require('knex')(sails.config.connection);
   var bookshelfScopes = require('bookshelf-scopes');
   var db = require('bookshelf')(knex)
@@ -36,6 +37,18 @@ module.exports = function (sails) {
           if (sails.config.models.initialize) sails.config.models.initialize(this);
           if (this.constructor.initialize) this.constructor.initialize(this);
           this.initSails();
+        },
+        saveTransaction: function(data, options) {
+          var model = this;
+          data = data || null;
+          options = options || {};
+
+          return new Promise(function(resolve, reject) {
+            db.transaction(function(t) {
+              options.transacting = t;
+              model.save(data, options).then(resolve, reject);
+            }).catch(_.noop);
+          });
         }
       }, {
         buildQuery: buildQuery

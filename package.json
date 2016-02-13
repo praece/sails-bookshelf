@@ -24,7 +24,7 @@
     "bookshelf": "^0.9.1",
     "bookshelf-scopes": "^1.4.0",
     "knex": "^0.9.0",
-    "lodash": "^3.10.1",
+    "lodash": "^4.3.0",
     "sails-util-mvcsloader": "^0.3.2"
   }
 }

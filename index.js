@@ -4,7 +4,8 @@ module.exports = function (sails) {
   var knex = require('knex')(sails.config.connection);
   var _ = require('lodash');
   var db = require('bookshelf')(knex)
-    .plugin('bookshelf-relationships');
+    .plugin('bookshelf-relationships')
+    .plugin('virtuals');
 
   var defaultValues = require('./lib/defaultValues');
   var strongParameters = require('./lib/strongParameters');

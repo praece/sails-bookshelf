@@ -25,7 +25,7 @@ module.exports = function findRecords (req, res) {
 
   // Build the query and fetch the results
   model.fetchAll({require: true})
-    .call('load', params.populate || [])
+    .call('populate', params.populate || [])
     .call('toJSON')
     .then(res.ok)
     .catch(collection.constructor.EmptyError, function() {

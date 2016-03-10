@@ -15,6 +15,7 @@ module.exports = function (sails) {
   var bindRoutes = require('./lib/bindRoutes');
   var transaction = require('./lib/transaction');
   var populate = require('./lib/populate');
+  var cleanQuery = require('./lib/cleanQuery');
 
   function log(model, data, options) {
     // If query logging is on log the query
@@ -33,12 +34,19 @@ module.exports = function (sails) {
     configure: function () {
       sails.Collection = db.Collection.extend({
         initialize: function() {
+          if (this.model.initializeCollection) {
+            this.model.initializeCollection(this);
+          }
+
           this.on('fetched', log);
         },
 
         // A version of load that incorporates default where clauses
         populate: populate
       });
+
+      // Set our collection to be the bookshelf collection
+      db.Collection = sails.Collection;
 
       // Extend the bookshelf model
       sails.Model = db.Model.extend({
@@ -63,15 +71,11 @@ module.exports = function (sails) {
           this.on('saving', validation);
           this.on('saving', nestedSave);
           this.on('saving', strongParameters);
+          this.on('fetching', cleanQuery);
         }
       }, {
         // Add a helper function for building queries
         buildQuery: buildQuery.buildQuery,
-
-        // Add our own collection shortcut that logs queries
-        collection: function(models, options) {
-          return new sails.Collection((models || []), _.assign({}, options, {model: this}));
-        }
       });
 
       // Set our blueprint path and add bookshelf to the sails object

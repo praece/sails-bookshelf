@@ -3,6 +3,7 @@ module.exports = function (sails) {
   var Promise = require('bluebird');
   var knex = require('knex')(sails.config.connection);
   var _ = require('lodash');
+  var config = sails.config.models;
   var db = require('bookshelf')(knex)
     .plugin('bookshelf-relationships')
     .plugin('virtuals');
@@ -34,9 +35,8 @@ module.exports = function (sails) {
     configure: function () {
       sails.Collection = db.Collection.extend({
         initialize: function() {
-          if (this.model.initializeCollection) {
-            this.model.initializeCollection(this);
-          }
+          if (this.model.initializeCollection) this.model.initializeCollection(this);
+          if (config.initializeCollection) config.initializeCollection(this);
 
           this.on('fetched', log);
         },
@@ -62,7 +62,7 @@ module.exports = function (sails) {
 
         initialize: function() {
           // Add any initialize functions for all models or specific models
-          if (sails.config.models.initialize) sails.config.models.initialize(this);
+          if (config.initialize) config.initialize(this);
           if (this.constructor.initialize) this.constructor.initialize(this);
           
           // Add our hooks on actions

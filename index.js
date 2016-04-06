@@ -8,15 +8,12 @@ module.exports = function (sails) {
     .plugin('bookshelf-relationships')
     .plugin('virtuals');
 
-  var defaultValues = require('./lib/defaultValues');
-  var strongParameters = require('./lib/strongParameters');
-  var validation = require('./lib/validation');
-  var nestedSave = require('./lib/nestedSave');
   var buildQuery = require('./lib/buildQuery');
   var bindRoutes = require('./lib/bindRoutes');
-  var transaction = require('./lib/transaction');
+  var graph = require('./lib/graph');
   var populate = require('./lib/populate');
   var cleanQuery = require('./lib/cleanQuery');
+  var save = require('./lib/save');
 
   function log(model, data, options) {
     // If query logging is on log the query
@@ -55,10 +52,11 @@ module.exports = function (sails) {
         idAttribute: 'id',
         
         // A shortcut method for saving with a transaction
-        saveTransaction: transaction,
+        saveGraph: graph,
 
         // A version of load that incorporates default where clauses
         populate: populate,
+        save: save,
 
         initialize: function() {
           // Add any initialize functions for all models or specific models
@@ -67,10 +65,6 @@ module.exports = function (sails) {
           
           // Add our hooks on actions
           this.on('fetching saved destroyed', log);
-          this.on('creating', defaultValues);
-          this.on('saving', validation);
-          this.on('saving', nestedSave);
-          this.on('saving', strongParameters);
           this.on('fetching', cleanQuery);
         }
       }, {

@@ -36,6 +36,7 @@ module.exports = function (sails) {
           if (config.initializeCollection) config.initializeCollection(this);
 
           this.on('fetched', log);
+          this.on('fetching', cleanQuery);
         },
 
         // A version of load that incorporates default where clauses

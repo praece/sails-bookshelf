@@ -11,9 +11,9 @@ module.exports = function (sails) {
   var buildQuery = require('./lib/buildQuery');
   var bindRoutes = require('./lib/bindRoutes');
   var graph = require('./lib/graph');
-  var populate = require('./lib/populate');
   var cleanQuery = require('./lib/cleanQuery');
   var save = require('./lib/save');
+  var load = require('./lib/load');
 
   function log(model, data, options) {
     // If query logging is on log the query
@@ -40,10 +40,11 @@ module.exports = function (sails) {
         },
 
         // A version of load that incorporates default where clauses
-        populate: populate
+        load: load.collection
       });
 
       // Set our collection to be the bookshelf collection
+      db.coreCollection = db.Collection;
       db.Collection = sails.Collection;
 
       // Extend the bookshelf model
@@ -55,9 +56,11 @@ module.exports = function (sails) {
         // A shortcut method for saving with a transaction
         saveGraph: graph,
 
-        // A version of load that incorporates default where clauses
-        populate: populate,
+        // Save that includes nested save, validation and defaults
         save: save,
+
+        // A version of load that incorporates default where clauses
+        load: load.model,
 
         initialize: function() {
           // Add any initialize functions for all models or specific models

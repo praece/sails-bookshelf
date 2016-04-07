@@ -21,7 +21,7 @@ module.exports = function findOneRecord (req, res) {
 
   // Fetch the record
   model.fetch({require: true})
-    .call('populate', params.populate || [])
+    .call('load', params.load || [])
     .call('toJSON')
     .then(res.ok)
     .catch(Model.NotFoundError, function(err) {

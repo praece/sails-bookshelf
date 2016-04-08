@@ -14,7 +14,7 @@ module.exports = function updateOneRecord (req, res) {
 
   // Grab and update the instance
   Model.forge({id: req.param('id')})
-    .saveTransaction(req.params.all())
+    .saveGraph(req.params.all())
     .call('toJSON')
     .then(res.ok)
     .catch(function(err) {

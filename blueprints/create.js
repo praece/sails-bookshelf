@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 /**
  * Create Record
  *

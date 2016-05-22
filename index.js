@@ -14,6 +14,7 @@ module.exports = function (sails) {
   var cleanQuery = require('./lib/cleanQuery');
   var save = require('./lib/save');
   var load = require('./lib/load');
+  var count = require('./lib/count');
 
   function log(model, data, options) {
     // If query logging is on log the query
@@ -40,7 +41,10 @@ module.exports = function (sails) {
         },
 
         // A version of load that incorporates default where clauses
-        load: load.collection
+        load: load.collection,
+
+        // A version of count that nests the query to avoid improper syntax
+        count: count
       });
 
       // Set our collection to be the bookshelf collection

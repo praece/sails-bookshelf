@@ -20,7 +20,7 @@ module.exports = function createRecord (req, res) {
 
   // Create and save the new instance
   Model.forge(values)
-    .saveGraph()
+    .saveGraph(null, { currentUser: req.user })
     .call('refresh')
     .call('toJSON')
     .then(res.created)

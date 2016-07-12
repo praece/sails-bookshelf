@@ -15,12 +15,25 @@ var _ = require('lodash');
  */
 module.exports = function createRecord (req, res) {
   // Load the model
-  var Model = sails.models[req.options.model];
-  var values = _.defaults(req.params.all() || {}, req.options.values);
+  const Model = sails.models[req.options.model];
+  
+  // Load any files and parse the body if necessary
+  const files = req._fileparser && req._fileparser.upstreams;
+  const options = { currentUser: req.user };
+  const params = files ? JSON.parse(req.params.all().body) : req.params.all();
+  const model = Model.forge(_.defaults(params, req.options.values));
+
+  // Map our files
+  if (files) {
+    options.files = _.compact(_.map(files, file => {
+      const path = file.fieldName;
+      const fields = _.keys(model.relationships);
+      if (_.includes(fields, path)) return req.file(path);
+    }));
+  }
 
   // Create and save the new instance
-  Model.forge(values)
-    .saveGraph(null, { currentUser: req.user })
+  model.saveGraph(null, options)
     .call('refresh')
     .call('toJSON')
     .then(res.created)

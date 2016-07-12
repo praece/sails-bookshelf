@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 /**
  * Update One Record
  *
@@ -10,12 +12,27 @@
  */
 module.exports = function updateOneRecord (req, res) {
   // Load the model
-  var Model = sails.models[req.options.model];
+  const Model = sails.models[req.options.model];
+  
+  // Load any files and parse the body if necessary
+  const files = req._fileparser && req._fileparser.upstreams;
+  const options = { currentUser: req.user };
+  const params = files ? JSON.parse(req.params.all().body) : req.params.all();
+  const model = Model.forge({id: req.param('id')});
+
+  // Map our files
+  if (files) {
+    options.files = _.compact(_.map(files, file => {
+      const path = file.fieldName;
+      const fields = _.keys(model.relationships);
+      if (_.includes(fields, path)) return req.file(path);
+    }));
+  }
 
   // Grab and update the instance
-  Model.forge({id: req.param('id')})
-    .set(req.params.all())
-    .saveGraph(null, { currentUser: req.user })
+  model.fetch()
+    .call('set', params)
+    .call('saveGraph', null, options)
     .call('refresh')
     .call('toJSON')
     .then(res.ok)

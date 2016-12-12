@@ -23,6 +23,7 @@
     "bluebird": "^3.2.1",
     "bookshelf": "^0.10.2",
     "bookshelf-relationships": "^1.0.1",
+    "knex": "^0.12.6",
     "lodash": "^4.3.0",
     "sails-util-mvcsloader": "^0.3.2"
   }

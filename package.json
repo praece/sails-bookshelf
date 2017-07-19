@@ -21,7 +21,7 @@
   "homepage": "https://github.com/praece/sails-bookshelf#readme",
   "dependencies": {
     "bluebird": "^3.2.1",
-    "bookshelf": "^0.10.2",
+    "bookshelf": "0.10.3",
     "bookshelf-relationships": "^1.0.1",
     "knex": "^0.12.6",
     "lodash": "^4.3.0",

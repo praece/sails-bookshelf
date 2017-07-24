@@ -24,7 +24,7 @@ module.exports = function findRecords (req, res) {
   var collection = Model.collection();
 
   // Build the query and fetch the results
-  model.fetchAll({require: true})
+  model.fetchAll({ require: true, currentUser: req.user })
     .call('load', params.load || [])
     .call('toJSON')
     .then(res.ok)

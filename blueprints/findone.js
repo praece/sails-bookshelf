@@ -20,7 +20,7 @@ module.exports = function findOneRecord (req, res) {
   var model = Model.forge({id: params.id});
 
   // Fetch the record
-  model.fetch({require: true})
+  model.fetch({ require: true, currentUser: req.user })
     .call('load', params.load || [])
     .call('toJSON')
     .then(res.ok)

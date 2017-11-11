@@ -13,6 +13,7 @@ module.exports = function (sails) {
   var graph = require('./lib/graph');
   var cleanQuery = require('./lib/cleanQuery');
   var save = require('./lib/save');
+  var format = require('./lib/format');
   var load = require('./lib/load');
   var count = require('./lib/count');
 
@@ -62,6 +63,9 @@ module.exports = function (sails) {
 
         // Save that includes nested save, validation and defaults
         save: save,
+
+        // Format that serializes jsonb arrays
+        format: format,
 
         // A version of load that incorporates default where clauses
         load: load.model,
